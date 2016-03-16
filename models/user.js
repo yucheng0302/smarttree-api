@@ -37,12 +37,11 @@ UserModel.prototype.user = function(params, success, fail) {
   var db = self.db();
   var logger = self.logger();
   var sql = db.prepare('SELECT * FROM Users WHERE userId = :id');
-
+  console.log(params.id);
   db.query(sql({ id: params.id }))
     .on('result', function(res) {
-      res.on('row', function onRow(row) {
+      res.on('data', function onRow(row) {
         logger.debug({ 'row': row });
-
         self.setResult(row);
       })
       .on('error', self.queryError.bind(self))
