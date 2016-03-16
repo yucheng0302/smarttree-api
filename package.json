@@ -9,6 +9,7 @@
     "mariasql": "^0.2.5",
     "restify": "^4.0.3"
   },
+  "license": "UNLICENSED",
   "devDependencies": {},
   "scripts": {},
   "repository": {}
