@@ -28,6 +28,7 @@ Model.prototype.addResult = function(result) {
 Model.prototype.db = function() {
   var db = new Client();
 
+  //Initiate, connect to DB
   db.connect({
     host: 'cmpe235.ceuvpllmlap3.us-west-2.rds.amazonaws.com',
     port: 3306,

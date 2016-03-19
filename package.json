@@ -7,8 +7,10 @@
   "dependencies": {
     "bunyan": "^1.0.0",
     "mariasql": "^0.2.5",
-    "restify": "^4.0.3"
+    "restify": "^4.0.3",
+    "node-uuid": "^1.4.7"
   },
+  "license": "UNLICENSED",
   "devDependencies": {},
   "scripts": {
     "start": "node app.js"
