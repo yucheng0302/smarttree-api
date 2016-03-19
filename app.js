@@ -37,6 +37,6 @@ server.use(function slowPoke(req, res, next) {
 require('./router.js')(__dirname+'/controllers', server);
 
 // start server
-server.listen(8080, function startServer() {
+server.listen(process.env.PORT || 8080, function startServer() {
   logger.info('%s listening at %s', server.name, server.url);
 });
