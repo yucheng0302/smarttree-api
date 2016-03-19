@@ -10,6 +10,8 @@
     "restify": "^4.0.3"
   },
   "devDependencies": {},
-  "scripts": {},
+  "scripts": {
+    "start": "node app.js"
+  },
   "repository": {}
 }
