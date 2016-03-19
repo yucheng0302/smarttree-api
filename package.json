@@ -10,6 +10,9 @@
     "restify": "^4.0.3",
     "node-uuid": "^1.4.7"
   },
+  "engines": {
+    "node": "^0.12.7"
+  },
   "license": "UNLICENSED",
   "devDependencies": {},
   "scripts": {
