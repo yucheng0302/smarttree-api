@@ -80,9 +80,9 @@ UserModel.prototype.userRegister = function(params, success, fail) {
   self.init({}, success, fail);
   var db = self.db();
   var logger = self.logger();
-  console.log(params);
+  //console.log(params);
   var sql = db.prepare('INSERT INTO Users (userId, email, userName, phoneNum, password) VALUES (:userId, :email, :userName, :phoneNum, :password)');
-  db.query(sql({userId: uuid.v4(), email: params.email, userName: params.userName, phoneNum: params.phoneNum, password: params.password }))
+  db.query(sql({userId: params.userId, email: params.email, userName: params.userName, phoneNum: params.phoneNum, password: params.password }))
     .on('result', function(res) {
       res.on('data', function onRow(row) {
         logger.debug({ 'row': row });

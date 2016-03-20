@@ -1,4 +1,6 @@
 var UserModel = require('../models/user');
+var uuid = require('node-uuid');
+
 var User = function() {};
 var user = new User();
 
@@ -71,8 +73,12 @@ User.prototype.getUserByEmail = function(req, res, next) {
 
 User.prototype.registerUser = function(req, res, next) {
   var userModel = new UserModel();
-  userModel.userRegister(JSON.parse(req.body), function(result) {
-    res.send(200);
+  //console.log(req.body);
+  var data = JSON.parse(req.body);
+  data.userId = uuid.v4();
+  //console.log(data);
+  userModel.userRegister(data, function(result) {
+    res.send({userId: data.userId});
   }, function(error) {
     res.send(500, {
       result: false,
@@ -81,6 +87,5 @@ User.prototype.registerUser = function(req, res, next) {
     });
   });
 
-  return next();
   return next();
 };
