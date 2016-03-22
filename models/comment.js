@@ -37,8 +37,8 @@ CommentModel.prototype.add = function(params, success, fail) {
   var db = self.db();
   var logger = self.logger();
   console.log(params);
-  var sql = db.prepare('INSERT INTO Comments (userId, comment) VALUES (:userId, :comment)');
-  db.query(sql({userId: params.userId, comment: params.comment }))
+  var sql = db.prepare('INSERT INTO Comments (userId, comment, rating) VALUES (:userId, :comment, :rating)');
+  db.query(sql({userId: params.userId, comment: params.comment, rating: params.rating }))
     .on('result', function(res) {
       res.on('data', function onRow(row) {
         logger.debug({ 'row': row });
