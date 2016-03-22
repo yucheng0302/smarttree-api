@@ -14,7 +14,7 @@ CommentModel.prototype.comments = function(params, success, fail) {
   self.init([], success, fail);
   var db = self.db();
   var logger = self.logger();
-  var sql = db.prepare('SELECT Comments.comment, Users.userName FROM Comments INNER JOIN Users ON Comments.userId = Users.userId');
+  var sql = db.prepare('SELECT Comments.comment, Comments.rating, Users.userName FROM Comments INNER JOIN Users ON Comments.userId = Users.userId');
 
   db.query(sql())
     .on('result', function(res) {
