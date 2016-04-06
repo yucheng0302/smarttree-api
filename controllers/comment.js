@@ -3,7 +3,8 @@ var Comment = function() {};
 var comment = new Comment();
 
 module.exports.route = function(app) {
-  app.get('/comments', comment.getComments);
+  app.get('/comments', comment.getComments); //to make the lab work
+  app.get('/comments/all', comment.getComments);
   app.put('/comment/add', comment.postComment);
 };
 
