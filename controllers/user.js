@@ -90,7 +90,7 @@ User.prototype.registerUser = function(req, res, next) {
   var data = JSON.parse(req.body);
   data.userId = uuid.v4();
   data.password = passwordHash.generate(data.password);
-  console.log(data);
+  //console.log(data);
   userModel.userRegister(data, function(result) {
     res.send({userId: data.userId});
   }, function(error) {

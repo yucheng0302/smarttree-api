@@ -17,8 +17,7 @@ TreeModel.prototype.trees = function(params, success, fail) {
   self.init([], success, fail);
   var db = self.db();
   var logger = self.logger();
-  var sql = db.prepare('SELECT * FROM SmartTrees');
-
+  var sql = db.prepare('SELECT SmartTrees.id FROM SmartTrees LEFT JOIN Sensors ON SmartTrees.sensorId=Sensors.id');
   db.query(sql())
     .on('result', function(res) {
       res.on('data', function onRow(row) {
@@ -34,13 +33,13 @@ TreeModel.prototype.trees = function(params, success, fail) {
   db.end();
 };
 
-TreeModel.prototype.treeUpdate = function(params, success, fail) {
+TreeModel.prototype.treeUpdateLike = function(params, success, fail) {
   var self = this;
   self.init({}, success, fail);
   var db = self.db();
   var logger = self.logger();
-  var sql = db.prepare('INSERT INTO Users (userId, email, userName, phoneNum, password, roleId) VALUES (:userId, :email, :userName, :phoneNum, :password, :roleId)');
-  db.query(sql({userId: params.userId, email: params.email, userName: params.userName, phoneNum: params.phoneNum, password: params.password, roleId: 2 }))
+  var sql = db.prepare('UPDATE SmartTrees SET likecount=:likecount where id=:id');
+  db.query(sql({likecount: params.likecount, id: params.id }))
     .on('result', function(res) {
       res.on('data', function onRow(row) {
         logger.debug({ 'row': row });
@@ -52,6 +51,26 @@ TreeModel.prototype.treeUpdate = function(params, success, fail) {
     .on('error', self.resultError.bind(self))
     .on('end', self.resultEnd.bind(self));
 
+  db.end();
+};
+
+TreeModel.prototype.treeAddSensor = function(params, success, fail) {
+  var self = this;
+  self.init({}, success, fail);
+  var db = self.db();
+  var logger = self.logger();
+  var sql = db.prepare('UPDATE SmartTrees SET sensorId=:sensorId WHERE id=:id');
+  db.query(sql({sensorId: params.sensorId, id: params.id}))
+    .on('result', function(res) {
+      res.on('data', function onRow(row) {
+        logger.debug({ 'row': row });
+        self.setResult(row);
+      })
+      .on('error', self.queryError.bind(self))
+      .on('end', self.queryEnd.bind(self));
+    })
+    .on('error', self.resultError.bind(self))
+    .on('end', self.resultEnd.bind(self));
   db.end();
 };
 
