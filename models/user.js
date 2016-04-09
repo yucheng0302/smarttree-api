@@ -2,9 +2,12 @@
  * User model
  */
 
+'use strict';
+
 var util = require('util');
 var Model = require('./base');
 var uuid = require('node-uuid');
+var passwordHash = require('password-hash');
 
 var UserModel = function() {};
 util.inherits(UserModel, Model);
@@ -59,8 +62,8 @@ UserModel.prototype.userByEmail = function(params, success, fail) {
   self.init({}, success, fail);
   var db = self.db();
   var logger = self.logger();
-  var sql = db.prepare('SELECT * FROM Users WHERE email = :email AND password= :password');
-  db.query(sql({ email: params.email, password: params.password }))
+  var sql = db.prepare('SELECT * FROM Users WHERE email = :email');
+  db.query(sql({ email: params.email }))
     .on('result', function(res) {
       res.on('data', function onRow(row) {
         logger.debug({ 'row': row });
@@ -75,14 +78,16 @@ UserModel.prototype.userByEmail = function(params, success, fail) {
   db.end();
 };
 
+//User should only be able to register for roleName user
 UserModel.prototype.userRegister = function(params, success, fail) {
   var self = this;
   self.init({}, success, fail);
   var db = self.db();
   var logger = self.logger();
   //console.log(params);
-  var sql = db.prepare('INSERT INTO Users (userId, email, userName, phoneNum, password) VALUES (:userId, :email, :userName, :phoneNum, :password)');
-  db.query(sql({userId: params.userId, email: params.email, userName: params.userName, phoneNum: params.phoneNum, password: params.password }))
+  var sql = db.prepare('INSERT INTO Users (userId, email, firstName, lastName, phoneNum, password, roleId) VALUES (:userId, :email, :firstName, :lastName, :phoneNum, :password, :roleId)');
+  //console.log(sql({userId: params.userId, email: params.email, firstName: params.firstName, lastName: params.lastName, phoneNum: params.phoneNum, password: params.password, roleId: 2 }));
+  db.query(sql({userId: params.userId, email: params.email, firstName: params.firstName, lastName: params.lastName, phoneNum: params.phoneNum, password: params.password, roleId: 2 }))
     .on('result', function(res) {
       res.on('data', function onRow(row) {
         logger.debug({ 'row': row });

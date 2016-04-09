@@ -1,3 +1,5 @@
+'use strict';
+
 var CommentModel = require('../models/comment');
 var Comment = function() {};
 var comment = new Comment();

@@ -1,3 +1,5 @@
+'use strict';
+
 var logger = require('../lib/db_logger');
 var Client = require('mariasql');
 

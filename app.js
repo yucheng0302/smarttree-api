@@ -1,3 +1,5 @@
+'use strict';
+
 var restify = require('restify');
 var fs = require('fs');
 var logger = require('./lib/logger');

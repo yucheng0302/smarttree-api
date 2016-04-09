@@ -2,6 +2,8 @@
  * Comment model
  */
 
+'use strict';
+
 var util = require('util');
 var Model = require('./base');
 
