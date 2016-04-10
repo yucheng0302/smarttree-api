@@ -17,8 +17,30 @@ TreeModel.prototype.trees = function(params, success, fail) {
   self.init([], success, fail);
   var db = self.db();
   var logger = self.logger();
-  var sql = db.prepare('SELECT SmartTrees.*, Sensor.name AS sensorName, Sensor.lighton AS sensorOn, Sensor.lightcolor AS sensorLightColor FROM SmartTrees LEFT JOIN Sensors AS Sensor ON Sensor.id=SmartTrees.sensorId');
+  var sql = db.prepare('SELECT * from SmartTrees');
   db.query(sql())
+    .on('result', function(res) {
+      res.on('data', function onRow(row) {
+        logger.debug({ 'row': row });
+        self.addResult(row);
+      })
+      .on('error', self.queryError.bind(self))
+      .on('end', self.queryEnd.bind(self));
+    })
+    .on('error', self.resultError.bind(self))
+    .on('end', self.resultEnd.bind(self));
+
+  db.end();
+};
+
+TreeModel.prototype.treeDetail = function(params, success, fail) {
+  console.log('>>>>>>> Get trees in DB <<<<<<');
+  var self = this;
+  self.init([], success, fail);
+  var db = self.db();
+  var logger = self.logger();
+  var sql = db.prepare('SELECT SmartTrees.*, Sensor.name AS sensorName, Sensor.lighton AS sensorOn, Sensor.lightcolor AS sensorLightColor FROM SmartTrees LEFT JOIN Sensors AS Sensor ON Sensor.id=SmartTrees.sensorId WHERE SmartTrees.id=:treeId');
+  db.query(sql({treeId: params.treeId}))
     .on('result', function(res) {
       res.on('data', function onRow(row) {
         logger.debug({ 'row': row });

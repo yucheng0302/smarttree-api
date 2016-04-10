@@ -8,6 +8,7 @@ var tree = new Tree();
 
 module.exports.route = function(app) {
   app.get('/trees', tree.getTrees);
+  app.get('/tree/:treeId', tree.getTreeDetail);
   app.put('/tree/register', tree.registerTree);
   app.put('/tree/addsensor', tree.addSensor);
   app.put('/tree/like', tree.updateLike);
@@ -19,6 +20,17 @@ module.exports.route = function(app) {
 Tree.prototype.getTrees = function(req, res, next) {
   var treeModel = new SmartTreesModel();
   treeModel.trees(req.params, function(result) {
+    res.send(result);
+  }, function(error) {
+    res.send(400, error);
+  });
+
+  return next();
+};
+
+Tree.prototype.getTreeDetail = function(req, res, next) {
+  var treeModel = new SmartTreesModel();
+  treeModel.treeDetail(req.params, function(result) {
     res.send(result);
   }, function(error) {
     res.send(400, error);

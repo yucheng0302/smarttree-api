@@ -97,4 +97,25 @@ CommentModel.prototype.add = function(params, success, fail) {
   db.end();
 };
 
+CommentModel.prototype.deleteComment = function(params, success, fail) {
+  var self = this;
+  self.init([], success, fail);
+  var db = self.db();
+  var logger = self.logger();
+  var sql = db.prepare('DELETE FROM Comments WHERE id=:commentId');
+  db.query(sql({commentId: params.commentId}))
+    .on('result', function(res) {
+      res.on('data', function onRow(row) {
+        logger.debug({ 'row': row });
+        self.addResult(row);
+      })
+      .on('error', self.queryError.bind(self))
+      .on('end', self.queryEnd.bind(self));
+    })
+    .on('error', self.resultError.bind(self))
+    .on('end', self.resultEnd.bind(self));
+
+  db.end();
+};
+
 module.exports = CommentModel;
