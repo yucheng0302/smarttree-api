@@ -36,9 +36,9 @@ server.use(function slowPoke(req, res, next) {
 });
 
 // load route
-require('./router.js')(__dirname+'/controllers', server);
+require('./router.js')(__dirname + '/controllers', server);
 
-// start server
+// start server, default PORT for heroku deployment
 server.listen(process.env.PORT || 8080, function startServer() {
   logger.info('%s listening at %s', server.name, server.url);
 });

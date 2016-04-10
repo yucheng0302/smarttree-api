@@ -10,7 +10,7 @@ module.exports.route = function(app) {
   app.get('/comments/tree/:treeId', comment.getCommentsPerTreeId);
   app.get('/comment/tree/:treeId/likecount', comment.getCommentLike);
   app.put('/comment/add', comment.postComment);
-  app.delete('/comment/:commentId', comment.deleteComment);
+  app.del('/comment/:commentId', comment.deleteComment);
 };
 
 /*
