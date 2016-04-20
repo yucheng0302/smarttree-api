@@ -38,7 +38,8 @@ CommentModel.prototype.commentsPerTree = function(params, success, fail) {
   self.init([], success, fail);
   var db = self.db();
   var logger = self.logger();
-  var sql = db.prepare('SELECT * Comments INNER JOIN Users ON Comments.userId = Users.userId where Comments.treeId=:treeId');
+  var sql = db.prepare('SELECT Comments.id, Comments.comment, Comments.rating, Comments.islike, Users.firstName, Users.lastName FROM Comments INNER JOIN Users ON Comments.userId = Users.userId AND Comments.treeId=:treeId');
+  //console.log(sql({treeId: params.treeId}));
   db.query(sql({treeId: params.treeId}))
     .on('result', function(res) {
       res.on('data', function onRow(row) {
