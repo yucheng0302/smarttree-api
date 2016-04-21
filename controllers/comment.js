@@ -8,7 +8,6 @@ module.exports.route = function(app) {
   app.get('/comments', comment.getAllComments); //to make the lab work
   app.get('/comments/all', comment.getAllComments);
   app.get('/comments/tree/:treeId', comment.getCommentsPerTreeId);
-  app.get('/comment/tree/:treeId/likecount', comment.getCommentLike);
   app.put('/comment/add', comment.postComment);
   app.del('/comment/:commentId', comment.deleteComment);
 };

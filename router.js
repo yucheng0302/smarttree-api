@@ -12,6 +12,7 @@ module.exports = function route(dirname, server) {
       route(filepath, server);
     } else {
       var controller = require(filepath);
+      //console.log(controller);
       controller.route(server);
     }
   });
