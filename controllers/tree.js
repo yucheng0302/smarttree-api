@@ -4,6 +4,13 @@ var SmartTreesModel = require('../models/tree');
 var uuid = require('node-uuid');
 var Q = require('q');
 
+//Define geocoder
+var geocoderProvider = 'google';
+var httpAdapter = 'http';
+// optional
+var extra = {};
+var geocoder = require('node-geocoder')(geocoderProvider, httpAdapter, extra);
+
 var Tree = function() {};
 var tree = new Tree();
 
@@ -131,20 +138,58 @@ Tree.prototype.addSensor = function(req, res, next) {
 //Request body as following
 /**
  * {id: params.id, title: params.title, description: params.description, address: params.address, longitude: params.longitude, latitude: params.latitude, youtubeId: params.youtubeId}
+ * Ex response for geocoder
+ * [ { formattedAddress: '1 Washington Square, San Jose, CA 95112, USA',
+    latitude: 37.3351424,
+    longitude: -121.8812758,
+    extra:
+     { googlePlaceId: 'ChIJiXzQ6LvMj4ARGSXqy3Ga5bg',
+       confidence: 1,
+       premise: null,
+       subpremise: null,
+       neighborhood: 'Central San Jose',
+       establishment: null },
+    administrativeLevels:
+     { level2long: 'Santa Clara County',
+       level2short: 'Santa Clara County',
+       level1long: 'California',
+       level1short: 'CA' },
+    streetNumber: '1',
+    streetName: 'Washington Square',
+    city: 'San Jose',
+    country: 'United States',
+    countryCode: 'US',
+    zipcode: '95112' } ]
+ * Reqbody:
+ * {title: params.title, description: params.description, address: params.address, youtubeId: params.youtubeId}
  */
 Tree.prototype.registerTree = function(req, res, next) {
+  console.log('>>>> generate new tree <<<<<');
   var treeModel = new SmartTreesModel();
-  var data = req.body;
-  data.id = uuid.v4();
-  treeModel.treeRegister(data, function(result) {
-    res.send({id: data.id});
-  }, function(error) {
-    res.send(500, {
-      result: false,
-      code: 500,
-      message: 'Internal server error'
-    });
+  var data = JSON.parse(req.body);
+  geocoder.geocode(data.address, function(err, result) {
+    if (result && result[0] && result[0].latitude && result[0].longitude) {
+      data.id = uuid.v4();
+      data.longitude = result[0].longitude;
+      data.latitude = result[0].latitude;
+      console.log(data);
+      treeModel.treeRegister(data, function(result) {
+        res.send({id: data.id});
+      }, function(error) {
+        res.send(500, {
+          result: false,
+          code: 500,
+          message: 'Internal server error'
+        });
+      });
+      return next();
+    } else {
+      res.send(500, {
+        result: false,
+        code: 500,
+        message: 'Fail to get long/lat from address'
+      });
+      return next();
+    }
   });
-
-  return next();
 };

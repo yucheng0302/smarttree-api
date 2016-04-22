@@ -220,7 +220,9 @@ TreeModel.prototype.treeRegister = function(params, success, fail) {
   var db = self.db();
   var logger = self.logger();
   var sql = db.prepare('INSERT INTO SmartTrees (id, title, description, address, longitude, latitude, youtubeId) VALUES (:id, :title, :description, :address, :longitude, :latitude, :youtubeId)');
-  db.query(sql({id: params.id, title: params.title, description: params.description, address: params.address, longitude: params.longitude, latitude: params.latitude, youtubeId: params.youtubeId}))
+  var sqlQuery = sql({id: params.id, title: params.title, description: params.description, address: params.address, longitude: params.longitude, latitude: params.latitude, youtubeId: params.youtubeId});
+  console.log(sqlQuery);
+  db.query(sqlQuery)
     .on('result', function(res) {
       res.on('data', function onRow(row) {
         logger.debug({ 'row': row });
