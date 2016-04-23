@@ -20,6 +20,7 @@ module.exports.route = function(app) {
   app.get('/tree/:treeId/sensors', tree.getTreeSensors);
   app.put('/tree/register', tree.registerTree);
   app.put('/tree/:treeId/sensor', tree.addSensor);
+  app.del('/tree/:treeId/sensor', tree.deleteSensor);
 };
 
 /*
@@ -121,7 +122,7 @@ Tree.prototype.getTreeSensors = function(req, res, next) {
 //{sensorId: params.sensorId}
 Tree.prototype.addSensor = function(req, res, next) {
   var treeModel = new SmartTreesModel();
-  var data = req.body;
+  var data = JSON.parse(req.body);
   data.treeId = req.params.treeId;
   treeModel.treeAddSensor(data, function(result) {
     res.send(200);
@@ -134,6 +135,25 @@ Tree.prototype.addSensor = function(req, res, next) {
   });
   return next();
 };
+
+//delete sensors per treeId
+//{sensorId: params.sensorId}
+Tree.prototype.deleteSensor = function(req, res, next) {
+  var treeModel = new SmartTreesModel();
+  var data = JSON.parse(req.body);
+  data.treeId = req.params.treeId;
+  treeModel.treeDelSensor(data, function(result) {
+    res.send(200);
+  }, function(error) {
+    res.send(500, {
+      result: false,
+      code: 500,
+      message: 'Internal server error'
+    });
+  });
+  return next();
+};
+
 
 //Register tree
 //Request body as following

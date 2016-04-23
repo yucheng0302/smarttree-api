@@ -213,6 +213,27 @@ TreeModel.prototype.treeAddSensor = function(params, success, fail) {
   db.end();
 };
 
+//DELETE FROM SmartTrees_Sensors where treeId='8f14886c-d267-44b8-8518-8cf363634929'
+TreeModel.prototype.treeDelSensor = function(params, success, fail) {
+  var self = this;
+  self.init({}, success, fail);
+  var db = self.db();
+  var logger = self.logger();
+  var sql = db.prepare('DELETE FROM SmartTrees_Sensors where treeId=:treeId AND sensorId=:sensorId');
+  db.query(sql({sensorId: params.sensorId, treeId: params.treeId}))
+    .on('result', function(res) {
+      res.on('data', function onRow(row) {
+        logger.debug({ 'row': row });
+        self.setResult(row);
+      })
+      .on('error', self.queryError.bind(self))
+      .on('end', self.queryEnd.bind(self));
+    })
+    .on('error', self.resultError.bind(self))
+    .on('end', self.resultEnd.bind(self));
+  db.end();
+};
+
 //Adding new tree
 TreeModel.prototype.treeRegister = function(params, success, fail) {
   var self = this;
