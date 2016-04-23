@@ -48,8 +48,7 @@ SensorModel.prototype.sensors = function(params, success, fail) {
   self.init([], success, fail);
   var db = self.db();
   var logger = self.logger();
-  var sql = db.prepare('SELECT * FROM Sensors');
-
+  var sql = db.prepare('SELECT Sensors.*, SmartTrees_Sensors.treeId FROM Sensors LEFT JOIN SmartTrees_Sensors ON Sensors.id = SmartTrees_Sensors.sensorId');
   db.query(sql())
     .on('result', function(res) {
       res.on('data', function onRow(row) {
