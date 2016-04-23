@@ -122,6 +122,7 @@ Tree.prototype.getTreeSensors = function(req, res, next) {
 Tree.prototype.addSensor = function(req, res, next) {
   var treeModel = new SmartTreesModel();
   var data = req.body;
+  data.treeId = req.params.treeId;
   treeModel.treeAddSensor(data, function(result) {
     res.send(200);
   }, function(error) {
