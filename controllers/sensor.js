@@ -50,6 +50,7 @@ Sensor.prototype.registerSensor = function(req, res, next) {
   var sensorModel = new SensorModel();
   var data = JSON.parse(req.body);
   data.id = uuid.v4();
+  console.log(data);
   sensorModel.sensorRegister(data, function(result) {
     sensorModel.sensorDetailRegister(data, function(result) {
       res.send({id: data.id});

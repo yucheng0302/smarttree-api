@@ -16,6 +16,7 @@ var util = require('util');
 var Model = require('./base');
 var uuid = require('node-uuid');
 var DB_Config = require('../lib/db_config');
+console.log(DB_Config);
 
 var SensorModel = function() {};
 util.inherits(SensorModel, Model);
