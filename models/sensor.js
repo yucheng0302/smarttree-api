@@ -65,6 +65,29 @@ SensorModel.prototype.sensors = function(params, success, fail) {
   db.end();
 };
 
+//Get sensor per tree
+SensorModel.prototype.sensorsPerTree = function(params, success, fail) {
+  console.log('>>>>>>> Get sensors per tree in DB <<<<<<');
+  var self = this;
+  self.init([], success, fail);
+  var db = self.db();
+  var logger = self.logger();
+  var sql = db.prepare('SELECT SmartTrees_Sensors.sensorId, Sensors.* FROM SmartTrees_Sensors JOIN Sensors ON Sensors.id = SmartTrees_Sensors.sensorId WHERE SmartTrees_Sensors.treeId=:treeId');
+  db.query(sql({treeId: params.treeId}))
+    .on('result', function(res) {
+      res.on('data', function onRow(row) {
+        logger.debug({ 'row': row });
+        self.addResult(row);
+      })
+      .on('error', self.queryError.bind(self))
+      .on('end', self.queryEnd.bind(self));
+    })
+    .on('error', self.resultError.bind(self))
+    .on('end', self.resultEnd.bind(self));
+
+  db.end();
+};
+
 //Get sensor details
 //select SmartTrees_Sensors.treeId, Sensors.sensorType, Sensors.name, WaterSensor.*, VoiceSensor.*, SpeedSensor.*, LightSensor.* FROM Sensors LEFT JOIN SmartTrees_Sensors ON SmartTrees_Sensors.sensorId=Sensors.id LEFT JOIN WaterSensor ON Sensors.id=WaterSensor.id LEFT JOIN VoiceSensor ON Sensors.id=VoiceSensor.id LEFT JOIN LightSensor ON LightSensor.id=Sensors.id LEFT JOIN SpeedSensor ON Sensors.id=LightSensor.id WHERE Sensors.id='9311ea88-079e-11e6-b512-3e1d05defe78'
 SensorModel.prototype.sensorPerId = function(params, success, fail) {

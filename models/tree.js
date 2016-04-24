@@ -63,7 +63,7 @@ TreeModel.prototype.treeDetail = function(params, success, fail) {
   self.init([], success, fail);
   var db = self.db();
   var logger = self.logger();
-  var sql = db.prepare('select SmartTrees.*, count(distinct (Comments.id)) AS likecount, count(distinct (SmartTrees_Sensors.sensorId)) AS sensorCount from SmartTrees LEFT JOIN SmartTrees_Sensors ON SmartTrees.id = SmartTrees_Sensors.treeId LEFT JOIN Comments ON Comments.treeId = SmartTrees.id WHERE SmartTrees.id=:treeId AND Comments.islike=true');
+  var sql = db.prepare('select SmartTrees.*, count(distinct (Comments.id)) AS likecount, count(distinct (SmartTrees_Sensors.sensorId)) AS sensorCount from SmartTrees RIGHT JOIN SmartTrees_Sensors ON SmartTrees.id = SmartTrees_Sensors.treeId RIGHT JOIN Comments ON Comments.treeId = SmartTrees.id WHERE SmartTrees.id=:treeId AND Comments.islike=true');
   db.query(sql({treeId: params.treeId}))
     .on('result', function(res) {
       res.on('data', function onRow(row) {

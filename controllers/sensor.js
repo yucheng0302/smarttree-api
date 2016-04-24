@@ -19,6 +19,7 @@ module.exports.route = function(app) {
  */
 Sensor.prototype.getSensorTypes = function(req, res, next) {
   var sensorModel = new SensorModel();
+  var sensorModel = new SensorModel();
   sensorModel.sensorsType(req.params, function(result) {
     res.send(result);
   }, function(error) {
@@ -29,17 +30,26 @@ Sensor.prototype.getSensorTypes = function(req, res, next) {
 
 Sensor.prototype.getSensors = function(req, res, next) {
   var sensorModel = new SensorModel();
-  sensorModel.sensors(req.params, function(result) {
-    res.send(result);
-  }, function(error) {
-    res.send(500, error);
-  });
+  var treeId = req.params.treeId;
+  if (!!treeId) {
+    sensorModel.sensorsPerTree(req.params, function(result) {
+      res.send(result);
+    }, function(error) {
+      res.send(500, error);
+    });
+  } else {
+    sensorModel.sensors(req.params, function(result) {
+      res.send(result);
+    }, function(error) {
+      res.send(500, error);
+    });
+  }
   return next();
 };
 
 //This is the short way to get sensor information, when you know about sensorType ahead of type
 Sensor.prototype.getSensorPerIdType = function(req, res, next) {
-  console.log('>>>> Get sensor per id tpe <<<<<');
+  console.log('>>>> Get sensor per id <<<<<');
   var sensorModel = new SensorModel();
   sensorModel.sensorPerIdType(req.params, function(result) {
     res.send(result);
