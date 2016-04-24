@@ -88,6 +88,30 @@ SensorModel.prototype.sensorPerId = function(params, success, fail) {
   db.end();
 };
 
+//Get sensor when already know sensorType
+SensorModel.prototype.sensorPerIdType = function(params, success, fail) {
+  var self = this;
+  self.init([], success, fail);
+  var db = self.db();
+  var logger = self.logger();
+  var query = 'select SmartTrees_Sensors.treeId, Sensors.name, {typeSensor}.* FROM Sensors LEFT JOIN SmartTrees_Sensors ON SmartTrees_Sensors.sensorId=Sensors.id LEFT JOIN {typeSensor} ON Sensors.id={typeSensor}.id WHERE Sensors.id=:id';
+  query = query.replace(/{typeSensor}/g, DB_Config.getTableSensor(params.type));
+  console.log(query);
+  var sql = db.prepare(query);
+  db.query(sql({id: params.id}))
+    .on('result', function(res) {
+      res.on('data', function onRow(row) {
+        logger.debug({ 'row': row });
+        self.addResult(row);
+      })
+      .on('error', self.queryError.bind(self))
+      .on('end', self.queryEnd.bind(self));
+    })
+    .on('error', self.resultError.bind(self))
+    .on('end', self.resultEnd.bind(self));
+  db.end();
+};
+
 //eg: INSERT INTO Sensors (id, name, sensorType) VALUES ('9311ea88-079e-11e6-b512-3e1d05defe78', 'Sensor 1-1', 1)
 SensorModel.prototype.sensorRegister = function(params, success, fail) {
   var self = this;
