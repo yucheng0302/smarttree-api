@@ -3,6 +3,8 @@
 var restify = require('restify');
 var fs = require('fs');
 var logger = require('./lib/logger');
+var cluster = require('cluster');//Create node cluster for load balancing
+var numCPUs = require('os').cpus().length;
 
 var server = restify.createServer({
   log: logger,
@@ -39,6 +41,21 @@ server.use(function slowPoke(req, res, next) {
 require('./router.js')(__dirname + '/controllers', server);
 
 // start server, default PORT for heroku deployment
-server.listen(process.env.PORT || 8080, function startServer() {
+/*server.listen(process.env.PORT || 8080, function startServer() {
   logger.info('%s listening at %s', server.name, server.url);
-});
+});*/
+
+//Cluster server starting
+if (cluster.isMaster) {
+  //Initiate workers
+  for (var i = 0; i < numCPUs; i++) {
+      cluster.fork();
+  }
+  cluster.on('exit', function(worker, code, signal) {
+      console.log('worker ' + worker.process.pid + ' died');
+  });
+} else { //http connection per port given
+  server.listen(process.env.PORT || 8080, function startServer() {
+    logger.info('%s listening at %s', server.name, server.url);
+  });
+}
