@@ -181,28 +181,28 @@ SensorModel.prototype.sensorDetailRegister = function(params, success, fail) {
 SensorModel.prototype.waterSensorUpdate = function(params, success, fail) {
   executeQuery(this, {
     query: 'UPDATE WaterSensor SET wateron=:on, watertemp=:watertemp WHERE id=:id',
-    obj: {on: params.on, watertemp: params.watertemp, id: params.id}
+    obj: {on: params.on, watertemp: params.data, id: params.id}
   }, success, fail);
 };
 
 SensorModel.prototype.lightSensorUpdate = function(params, success, fail) {
   executeQuery(this, {
     query: 'UPDATE LightSensor SET lighton=:on, lightcolor=:lightcolor WHERE id=:id',
-    obj: {on: params.on, lightcolor: params.lightcolor, id: params.id}
+    obj: {on: params.on, lightcolor: params.data, id: params.id}
   }, success, fail);
 };
 
 SensorModel.prototype.speedSensorUpdate = function(params, success, fail) {
   executeQuery(this, {
     query: 'UPDATE SpeedSensor SET speedon=:on, speedlimit=:speedlimit WHERE id=:id',
-    obj: {on: params.on, speedlimit: params.speedlimit, id: params.id}
+    obj: {on: params.on, speedlimit: params.data, id: params.id}
   }, success, fail);
 };
 
 SensorModel.prototype.voiceSensorUpdate = function(params, success, fail) {
    executeQuery(this, {
     query: 'UPDATE VoiceSensor SET voiceon=:on, volume=:volume WHERE id=:id',
-    obj: {on: params.on, volume: params.volume, id: params.id}
+    obj: {on: params.on, volume: params.data, id: params.id}
   }, success, fail);
 };
 
