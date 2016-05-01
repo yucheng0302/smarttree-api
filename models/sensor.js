@@ -16,14 +16,14 @@ var util = require('util');
 var Model = require('./base');
 var uuid = require('node-uuid');
 var DB_Config = require('../lib/db_config');
-console.log(DB_Config);
 
 var SensorModel = function() {};
 util.inherits(SensorModel, Model);
 
 SensorModel.prototype.sensorsType = function(params, success, fail) {
-  console.log('>>>>>>> Get sensors type in DB <<<<<<');
   var self = this;
+  console.log('>>>>>>> Get sensors type in DB <<<<<<');
+  //console.log(self);
   self.init([], success, fail);
   var db = self.db();
   var logger = self.logger();
@@ -44,8 +44,8 @@ SensorModel.prototype.sensorsType = function(params, success, fail) {
 };
 
 SensorModel.prototype.sensors = function(params, success, fail) {
-  console.log('>>>>>>> Get sensors in DB <<<<<<');
   var self = this;
+  console.log('>>>>>>> Get sensors in DB <<<<<<');
   self.init([], success, fail);
   var db = self.db();
   var logger = self.logger();
@@ -67,8 +67,8 @@ SensorModel.prototype.sensors = function(params, success, fail) {
 
 //Get sensor per tree
 SensorModel.prototype.sensorsPerTree = function(params, success, fail) {
-  console.log('>>>>>>> Get sensors per tree in DB <<<<<<');
   var self = this;
+  console.log('>>>>>>> Get sensors per tree in DB <<<<<<');
   self.init([], success, fail);
   var db = self.db();
   var logger = self.logger();
@@ -91,8 +91,8 @@ SensorModel.prototype.sensorsPerTree = function(params, success, fail) {
 //Get sensor details
 //select SmartTrees_Sensors.treeId, Sensors.sensorType, Sensors.name, WaterSensor.*, VoiceSensor.*, SpeedSensor.*, LightSensor.* FROM Sensors LEFT JOIN SmartTrees_Sensors ON SmartTrees_Sensors.sensorId=Sensors.id LEFT JOIN WaterSensor ON Sensors.id=WaterSensor.id LEFT JOIN VoiceSensor ON Sensors.id=VoiceSensor.id LEFT JOIN LightSensor ON LightSensor.id=Sensors.id LEFT JOIN SpeedSensor ON Sensors.id=LightSensor.id WHERE Sensors.id='9311ea88-079e-11e6-b512-3e1d05defe78'
 SensorModel.prototype.sensorPerId = function(params, success, fail) {
-  console.log('>>>>>>> Get sensor per id in DB <<<<<<');
   var self = this;
+  console.log('>>>>>>> Get sensor per id in DB <<<<<<');
   self.init([], success, fail);
   var db = self.db();
   var logger = self.logger();
@@ -138,6 +138,7 @@ SensorModel.prototype.sensorPerIdType = function(params, success, fail) {
 //eg: INSERT INTO Sensors (id, name, sensorType) VALUES ('9311ea88-079e-11e6-b512-3e1d05defe78', 'Sensor 1-1', 1)
 SensorModel.prototype.sensorRegister = function(params, success, fail) {
   var self = this;
+  console.log('>>>>>>> Sensor register <<<<<<');
   self.init({}, success, fail);
   var db = self.db();
   var logger = self.logger();
@@ -179,28 +180,37 @@ SensorModel.prototype.sensorDetailRegister = function(params, success, fail) {
 };
 
 SensorModel.prototype.waterSensorUpdate = function(params, success, fail) {
-  executeQuery(this, {
+  var self = this;
+  console.log(">>>>>> Water sensor update <<<<<<");
+  console.log(self);
+  executeQuery(self, {
     query: 'UPDATE WaterSensor SET wateron=:on, watertemp=:watertemp WHERE id=:id',
     obj: {on: params.on, watertemp: params.data, id: params.id}
   }, success, fail);
 };
 
 SensorModel.prototype.lightSensorUpdate = function(params, success, fail) {
-  executeQuery(this, {
+  var self = this;
+  console.log(">>>>>> Light sensor update <<<<<<");
+  executeQuery(self, {
     query: 'UPDATE LightSensor SET lighton=:on, lightcolor=:lightcolor WHERE id=:id',
     obj: {on: params.on, lightcolor: params.data, id: params.id}
   }, success, fail);
 };
 
 SensorModel.prototype.speedSensorUpdate = function(params, success, fail) {
-  executeQuery(this, {
+  var self = this;
+  console.log(">>>>>> Speed sensor update <<<<<<");
+  executeQuery(self, {
     query: 'UPDATE SpeedSensor SET speedon=:on, speedlimit=:speedlimit WHERE id=:id',
     obj: {on: params.on, speedlimit: params.data, id: params.id}
   }, success, fail);
 };
 
 SensorModel.prototype.voiceSensorUpdate = function(params, success, fail) {
-   executeQuery(this, {
+  var self = this;
+  console.log(">>>>>> Speed sensor update <<<<<<");
+  executeQuery(self, {
     query: 'UPDATE VoiceSensor SET voiceon=:on, volume=:volume WHERE id=:id',
     obj: {on: params.on, volume: params.data, id: params.id}
   }, success, fail);
@@ -209,10 +219,12 @@ SensorModel.prototype.voiceSensorUpdate = function(params, success, fail) {
 //Common function generate sql query and execute
 function executeQuery(self, data, success, fail) {
   //var self = this;
+  console.log(self);
   self.init({}, success, fail);
   var db = self.db();
   var logger = self.logger();
   var sql = db.prepare(data.query);
+  console.log(data.query);
   db.query(sql(data.obj))
     .on('result', function(res) {
       res.on('data', function onRow(row) {

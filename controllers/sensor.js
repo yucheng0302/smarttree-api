@@ -19,7 +19,6 @@ module.exports.route = function(app) {
  */
 Sensor.prototype.getSensorTypes = function(req, res, next) {
   var sensorModel = new SensorModel();
-  var sensorModel = new SensorModel();
   sensorModel.sensorsType(req.params, function(result) {
     res.send(result);
   }, function(error) {
@@ -97,10 +96,23 @@ Sensor.prototype.registerSensor = function(req, res, next) {
 };
 
 Sensor.prototype.updateSensor = function(req, res, next) {
-  var params = JSON.parse(req.body);
-  params.id = req.params.id;
-  var func = getUpdateFunc(parseInt(req.params.type, 10));
-  func(JSON.parse(req.body), function(result) {
+  var sensorModel = new SensorModel();
+  //console.log(sensorModel);
+  var data = JSON.parse(req.body);
+  data.id = req.params.id;
+  //var func = getUpdateFunc(parseInt(req.params.type, 10));
+  //console.log(func);
+  /*var func = sensorModel.waterSensorUpdate;
+  func.call(data, function(result) {
+    res.send(200);
+  }, function(error) {
+    res.send(500, {
+      result: false,
+      code: 500,
+      message: 'Internal server error'
+    });
+  });*/
+  getUpdateFunc(parseInt(req.params.type, 10), data, function(result) {
     res.send(200);
   }, function(error) {
     res.send(500, {
@@ -119,16 +131,16 @@ Sensor.prototype.updateSensor = function(req, res, next) {
 //2. light
 //3. speed
 //4. voice
-function getUpdateFunc(type) {
+function getUpdateFunc(type, data, success, failure) {
   var sensorModel = new SensorModel();
   if (type === 1) {
-    return sensorModel.waterSensorUpdate;
+    return sensorModel.waterSensorUpdate(data, success, failure);
   } else if (type === 4) {
-    return sensorModel.voiceSensorUpdate;
+    return sensorModel.voiceSensorUpdate(data, success, failure);
   } else  if (type === 3) {
-    return sensorModel.speedSensorUpdate;
+    return sensorModel.speedSensorUpdate(data, success, failure);
   } else {
-    return sensorModel.lightSensorUpdate;
+    return sensorModel.lightSensorUpdate(data, success, failure);
   }
 }
 
