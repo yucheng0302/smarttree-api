@@ -20,7 +20,7 @@ module.exports.route = function(app) {
   app.get('/tree/:treeId/sensors', tree.getTreeSensors);
   app.put('/tree/register', tree.registerTree);
   app.put('/tree/:treeId/sensor', tree.addSensor);
-  app.del('/tree/:treeId/sensor', tree.deleteSensor);
+  app.del('/tree/:treeId/sensor/:sensorId', tree.deleteSensor);
 };
 
 /*
@@ -140,9 +140,7 @@ Tree.prototype.addSensor = function(req, res, next) {
 //{sensorId: params.sensorId}
 Tree.prototype.deleteSensor = function(req, res, next) {
   var treeModel = new SmartTreesModel();
-  var data = JSON.parse(req.body);
-  data.treeId = req.params.treeId;
-  treeModel.treeDelSensor(data, function(result) {
+  treeModel.treeDelSensor(req.params, function(result) {
     res.send(200);
   }, function(error) {
     res.send(500, {
