@@ -184,7 +184,7 @@ SensorModel.prototype.waterSensorUpdate = function(params, success, fail) {
   console.log(">>>>>> Water sensor update <<<<<<");
   console.log(self);
   executeQuery(self, {
-    query: 'UPDATE WaterSensor SET wateron=:on, watertemp=:watertemp WHERE id=:id',
+    query: 'UPDATE WaterSensor SET onoff=:on, watertemp=:watertemp WHERE id=:id',
     obj: {on: params.on, watertemp: params.data, id: params.id}
   }, success, fail);
 };
@@ -193,7 +193,7 @@ SensorModel.prototype.lightSensorUpdate = function(params, success, fail) {
   var self = this;
   console.log(">>>>>> Light sensor update <<<<<<");
   executeQuery(self, {
-    query: 'UPDATE LightSensor SET lighton=:on, lightcolor=:lightcolor WHERE id=:id',
+    query: 'UPDATE LightSensor SET onoff=:on, lightcolor=:lightcolor WHERE id=:id',
     obj: {on: params.on, lightcolor: params.data, id: params.id}
   }, success, fail);
 };
@@ -202,7 +202,7 @@ SensorModel.prototype.speedSensorUpdate = function(params, success, fail) {
   var self = this;
   console.log(">>>>>> Speed sensor update <<<<<<");
   executeQuery(self, {
-    query: 'UPDATE SpeedSensor SET speedon=:on, speedlimit=:speedlimit WHERE id=:id',
+    query: 'UPDATE SpeedSensor SET onoff=:on, speedlimit=:speedlimit WHERE id=:id',
     obj: {on: params.on, speedlimit: params.data, id: params.id}
   }, success, fail);
 };
@@ -211,7 +211,7 @@ SensorModel.prototype.voiceSensorUpdate = function(params, success, fail) {
   var self = this;
   console.log(">>>>>> Speed sensor update <<<<<<");
   executeQuery(self, {
-    query: 'UPDATE VoiceSensor SET voiceon=:on, volume=:volume WHERE id=:id',
+    query: 'UPDATE VoiceSensor SET onoff=:on, volume=:volume WHERE id=:id',
     obj: {on: params.on, volume: params.data, id: params.id}
   }, success, fail);
 };
@@ -224,8 +224,8 @@ function executeQuery(self, data, success, fail) {
   var db = self.db();
   var logger = self.logger();
   var sql = db.prepare(data.query);
-  console.log(data.query);
-  db.query(sql(data.obj))
+  var query = sql(data.obj);
+  db.query(query)
     .on('result', function(res) {
       res.on('data', function onRow(row) {
         logger.debug({ 'row': row });
