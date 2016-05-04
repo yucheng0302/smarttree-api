@@ -38,7 +38,7 @@ PhotoModel.prototype.registerPhoto = function(params, success, fail) {
   self.init([], success, fail);
   var db = self.db();
   var logger = self.logger();
-  var sql = db.prepare('INSERT INTO Photos (fielname, treeId) VALUES (:filename, :treeId)');
+  var sql = db.prepare('INSERT INTO Photos (filename, treeId) VALUES (:filename, :treeId)');
   db.query(sql({filename: params.filename, treeId: params.treeId}))
     .on('result', function(res) {
       res.on('data', function onRow(row) {
